@@ -99,15 +99,21 @@ class BookServiceTest {
         Book stored = new Book();
         stored.setId(1L);
         stored.setTitle("Ancien titre");
+        stored.setDescription("Ancienne description");
+        stored.setIsbn("XYZ");
         when(bookRepository.findById(1L)).thenReturn(Optional.of(stored));
 
         book.setTitle("Nouveau titre");
+        book.setDescription("Nouvelle description");
+        book.setIsbn("NEWISBN");
 
         // WHEN
         bookService.addOrUpdateBook(book);
 
         // THEN
         assertThat(stored.getTitle()).isEqualTo("Nouveau titre");
+        assertThat(stored.getDescription()).isEqualTo("Nouvelle description");
+        assertThat(stored.getIsbn()).isEqualTo("NEWISBN");
         verify(bookRepository).save(stored);
     }
 
