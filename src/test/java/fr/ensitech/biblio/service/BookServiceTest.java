@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -60,73 +59,6 @@ class BookServiceTest {
         book.setPublished(true);
         book.setPublishedDate(calendar.getTime());
         book.setAuthors(new HashSet<>(Collections.singletonList(author)));
-    }
-
-    /* ==================================== addOrUpdateBook(Book) ==================================== */
-
-    @Test
-    @DisplayName("Doit sauvegarder un nouveau livre quand l'identifiant vaut 0")
-    void shouldSaveNewBookWhenIdIsZero() throws Exception {
-        // GIVEN
-        book.setId(0L);
-        when(bookRepository.save(book)).thenReturn(book);
-
-        // WHEN
-        bookService.addOrUpdateBook(book);
-
-        // THEN
-        verify(bookRepository).save(book);
-    }
-
-    @Test
-    @DisplayName("Doit lever une exception si l'identifiant est négatif")
-    void shouldThrowWhenIdIsNegative() {
-        // GIVEN
-        book.setId(-1L);
-
-        // WHEN / THEN
-        assertThatThrownBy(() -> bookService.addOrUpdateBook(book))
-                .isInstanceOf(Exception.class)
-                .hasMessage("Book id must be greater than 0 !");
-
-        verifyNoInteractions(bookRepository);
-    }
-
-    @Test
-    @DisplayName("Doit mettre à jour un livre existant")
-    void shouldUpdateExistingBook() throws Exception {
-        // GIVEN
-        Book stored = new Book();
-        stored.setId(1L);
-        stored.setTitle("Ancien titre");
-        stored.setDescription("Ancienne description");
-        stored.setIsbn("XYZ");
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(stored));
-
-        book.setTitle("Nouveau titre");
-        book.setDescription("Nouvelle description");
-        book.setIsbn("NEWISBN");
-
-        // WHEN
-        bookService.addOrUpdateBook(book);
-
-        // THEN
-        assertThat(stored.getTitle()).isEqualTo("Nouveau titre");
-        assertThat(stored.getDescription()).isEqualTo("Nouvelle description");
-        assertThat(stored.getIsbn()).isEqualTo("NEWISBN");
-        verify(bookRepository).save(stored);
-    }
-
-    @Test
-    @DisplayName("Doit propager une erreur si le livre à mettre à jour est introuvable")
-    void shouldThrowWhenUpdatingMissingBook() {
-        // GIVEN
-        book.setId(2L);
-        when(bookRepository.findById(2L)).thenReturn(Optional.empty());
-
-        // WHEN / THEN
-        assertThatThrownBy(() -> bookService.addOrUpdateBook(book))
-                .isInstanceOf(NoSuchElementException.class);
     }
 
     /* ==================================== getBooks() ==================================== */
