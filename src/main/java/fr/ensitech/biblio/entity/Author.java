@@ -1,27 +1,37 @@
 package fr.ensitech.biblio.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "author", catalog = "biblio_database")
-@Setter @Getter @ToString @NoArgsConstructor @AllArgsConstructor
+@Table(
+        name = "authors",
+        indexes = {
+                @Index(name = "idx_author_name", columnList = "lastname,firstname")
+        }
+)
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(length = 48, nullable = false)
+    @Column(nullable = false, length = 48)
     private String firstname;
 
-    @Column(length = 48, nullable = false)
+    @Column(nullable = false, length = 48)
     private String lastname;
 
+    @Column
+    private LocalDate birthdate;
+
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-    private Set<Book> books = new HashSet<Book>();
+    private Set<Book> books = new HashSet<>();
 }

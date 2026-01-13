@@ -178,7 +178,7 @@ public class BookController implements IBookController {
                 && book.getTitle() != null && !book.getTitle().isBlank()
                 && book.getDescription() != null && !book.getDescription().isBlank()
                 && book.getEditor() != null && !book.getEditor().isBlank()
-                && book.getPublishedDate() != null
+                && book.getPublicationDate() != null
                 && book.getCategory() != null && !book.getCategory().isBlank()
                 && book.getLanguage() != null && !book.getLanguage().isBlank()
                 && book.getNbPages() > 0;
